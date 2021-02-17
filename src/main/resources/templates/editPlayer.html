@@ -24,10 +24,19 @@
 
         <title>Edit Player</title>
     </head>
+    <style>
+        button a {
+            color: white;
+        }
+        button a:hover {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
     <body>
         <div th:replace="fragments/header :: header"></div>
         <main class="container">
-            <h1 class="my-4 text-center">Add New Player</h1>
+            <h1 class="my-4 text-center">Edit Player</h1>
             <div class="row justify-content-center">
                 <form th:action="@{/editPlayer}" th:object="${player}" method="POST" class="col-6">
                     <input type="hidden" th:field="*{id}" />
@@ -104,6 +113,9 @@
 
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary px-5 py-2">Submit</button>
+                        <a href="/players">
+                            <button type="button" class="btn btn-danger px-5 py-2">Cancel</button>
+                        </a>
                     </div>
                 </form>
             </div>
