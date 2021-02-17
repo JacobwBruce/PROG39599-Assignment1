@@ -1,0 +1,1 @@
+INSERT INTO player(name, email, phone, age, gender) VALUES('Jacob Bruce', 'brucejac@sheridancolleg.ca', '2898392377', 21, 'male')
