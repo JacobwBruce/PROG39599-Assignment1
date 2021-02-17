@@ -26,6 +26,88 @@
     </head>
     <body>
         <div th:replace="fragments/header :: header"></div>
-        <main class="container"></main>
+        <main class="container">
+            <h1 class="my-4 text-center">Add New Player</h1>
+            <div class="row justify-content-center">
+                <form action="/addPlayer" method="POST" class="col-6">
+                    <!-- Name -->
+                    <div class="mb-4">
+                        <label for="nameInput" class="form-label">Name</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nameInput"
+                            placeholder="John Doe"
+                        />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label for="emailInput" class="form-label">Email address</label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="emailInput"
+                            placeholder="name@example.com"
+                        />
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="mb-4">
+                        <label for="phoneInput" class="form-label">Phone number</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="phoneInput"
+                            placeholder="999-999-9999"
+                        />
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="mb-4">
+                        <label class="form-label">Gender</label>
+                        <div class="form-check ml-2">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="genderRadio"
+                                id="genderRadio1"
+                            />
+                            <label class="form-check-label" for="genderRadio1"> Male </label>
+                        </div>
+                        <div class="form-check ml-2">
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="genderRadio"
+                                id="genderRadio2"
+                                checked
+                            />
+                            <label class="form-check-label" for="genderRadio2"> Female </label>
+                        </div>
+                    </div>
+
+                    <!-- Age -->
+                    <div class="mb-4">
+                        <label for="ageRange" class="form-label"
+                            >Age: <span id="ageText">20</span></label
+                        >
+                        <input
+                            type="range"
+                            class="form-range"
+                            id="ageRange"
+                            min="0"
+                            max="100"
+                            value="20"
+                        />
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary px-5 py-2">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </main>
     </body>
+    <script th:src="@{js/addPlayer.js}" defer></script>
 </html>
