@@ -57,8 +57,16 @@
                             <td th:text="${player.phone}"></td>
                             <td th:text="${player.age}"></td>
                             <td th:text="${player.gender}"></td>
-                            <td><i class="fas fa-edit"></i></td>
-                            <td><i class="fas fa-trash"></i></td>
+                            <td>
+                                <a th:href="@{/editPlayer/{id}(id=${player.id})}"
+                                    ><i class="fas fa-edit"></i
+                                ></a>
+                            </td>
+                            <td>
+                                <a th:href="@{/deletePlayer/{id}(id=${player.id})}"
+                                    ><i class="fas fa-trash"></i
+                                ></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

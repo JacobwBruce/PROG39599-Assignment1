@@ -22,14 +22,15 @@
         <!-- Bootstrap template -->
         <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 
-        <title>Add Player</title>
+        <title>Edit Player</title>
     </head>
     <body>
         <div th:replace="fragments/header :: header"></div>
         <main class="container">
             <h1 class="my-4 text-center">Add New Player</h1>
             <div class="row justify-content-center">
-                <form th:action="@{/addPlayer}" th:object="${player}" method="POST" class="col-6">
+                <form th:action="@{/editPlayer}" th:object="${player}" method="POST" class="col-6">
+                    <input type="hidden" th:field="*{id}" />
                     <!-- Name -->
                     <div class="mb-4">
                         <label for="nameInput" class="form-label">Name</label>
@@ -97,7 +98,6 @@
                             id="ageRange"
                             min="0"
                             max="100"
-                            value="0"
                             th:field="*{age}"
                         />
                     </div>

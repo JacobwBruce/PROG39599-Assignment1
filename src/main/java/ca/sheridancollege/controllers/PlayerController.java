@@ -1,9 +1,13 @@
 package ca.sheridancollege.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import ca.sheridancollege.beans.Player;
@@ -21,18 +25,27 @@ public class PlayerController {
         return "redirect:/players";
     }
 
-    @GetMapping("/editPlayer")
-    public String goEditPlayer() {
-        return "";
+    @GetMapping("/editPlayer/{id}")
+    public String goEditPlayer(@PathVariable int id, Model model) {
+        Optional<Player> player = playerRepo.findById(id);
+        if (!player.isPresent()) {
+            // player not found!!
+            return "redirect:/players";
+        } else {
+            model.addAttribute("player", player.get());
+            return "editPlayer.html";
+        }
     }
 
     @PostMapping("/editPlayer")
-    public String editPlayer() {
-        return "";
+    public String editPlayer(@ModelAttribute Player player) {
+        playerRepo.save(player);
+        return "redirect:/players";
     }
 
-    @GetMapping("/deletePlayer")
-    public String goDeletePlayer() {
-        return "";
+    @GetMapping("/deletePlayer/{id}")
+    public String goDeletePlayer(@PathVariable int id) {
+        playerRepo.deleteById(id);
+        return "redirect:/players";
     }
 }
