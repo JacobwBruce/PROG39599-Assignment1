@@ -11,4 +11,14 @@ public class VolleyballController {
         return "index.html";
     }
 
+    @GetMapping("/players")
+    public String goPlayers() {
+        return "players.html";
+    }
+
+    @GetMapping("/addPlayer")
+    public String goAddPlayer() {
+        return "addPlayer.html";
+    }
+
 }
