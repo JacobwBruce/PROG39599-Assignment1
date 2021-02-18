@@ -22,6 +22,7 @@ public class NavigationController {
     @GetMapping("/players")
     public String goPlayers(Model model) {
         model.addAttribute("players", playerRepo.findAll());
+        model.addAttribute("numOfPlayers", playerRepo.count());
         return "players.html";
     }
 
