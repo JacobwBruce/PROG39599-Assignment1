@@ -3,6 +3,7 @@
     th:fragment="header"
     xmlns:th="http://www.thymeleaf.org"
 >
+    <script th:src="@{/js/header.js}" defer></script>
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Assignment 1</a>
         <button
@@ -28,13 +29,25 @@
                     <a class="nav-link" href="/teams">Teams</a>
                 </li>
             </ul>
-            <form class="d-flex">
+            <form
+                class="d-flex"
+                th:action="@{/search}"
+                name="searchForm"
+                onsubmit="return validateForm()"
+            >
                 <input
                     class="form-control me-2"
                     type="search"
                     placeholder="Search"
                     aria-label="Search"
+                    id="query"
+                    name="query"
                 />
+                <select class="form-select" aria-label="Default select example" name="searchBy">
+                    <option value="name" selected>Name</option>
+                    <option value="age">Age</option>
+                    <option value="gender">Gender</option>
+                </select>
                 <button class="btn btn-outline-light" type="submit">Search</button>
             </form>
         </div>
