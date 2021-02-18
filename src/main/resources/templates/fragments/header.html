@@ -36,14 +36,18 @@
                 onsubmit="return validateForm()"
             >
                 <input
-                    class="form-control me-2"
+                    class="form-control me-2 mr-0"
                     type="search"
                     placeholder="Search"
                     aria-label="Search"
                     id="query"
                     name="query"
                 />
-                <select class="form-select" aria-label="Default select example" name="searchBy">
+                <select
+                    class="form-select ml-0 mr-2"
+                    aria-label="Default select example"
+                    name="searchBy"
+                >
                     <option value="name" selected>Name</option>
                     <option value="age">Age</option>
                     <option value="gender">Gender</option>
