@@ -22,14 +22,14 @@
         <main class="container">
             <h1 class="my-4 text-center">Teams</h1>
 
-            <a href="/organizeTeams" class="mb-3">
+            <a href="/organizeTeams" class="mb-3 ml-5">
                 <button type="button" class="btn btn-primary px-5" id="add-player-btn">
                     Organize
                 </button>
             </a>
 
-            <div class="d-flex flex-wrap justify-content-center">
-                <div th:each="team : ${teams}" class="card m-4 shadow" style="width: 18rem">
+            <div class="d-flex flex-wrap justify-content-evenly">
+                <div th:each="team : ${teams}" class="card my-3 shadow" style="width: 18rem">
                     <!-- <img src="..." class="card-img-top" alt="..." /> -->
                     <div class="card-body">
                         <h5 class="card-title" th:text="${team}"></h5>
@@ -44,7 +44,7 @@
                             </li>
                             <li class="list-group-item">
                                 <strong>Team Captain: </strong><br />
-                                John Doe
+                                N/A
                             </li>
                         </ul>
                         <a href="#" class="btn btn-primary">Team Roster</a>
