@@ -28,8 +28,19 @@ public class NavigationController {
 
     @GetMapping("/addPlayer")
     public String goAddPlayer(Model model) {
+        if (playerRepo.count() >= 64) {
+            return "redirect:/players";
+        }
         model.addAttribute("player", new Player());
         return "addPlayer.html";
+    }
+
+    @GetMapping("/teams")
+    public String goTeams(Model model) {
+        String[] teams = new String[] { "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "Team 6", "Team 7",
+                "Team 8" };
+        model.addAttribute("teams", teams);
+        return "teams.html";
     }
 
 }
