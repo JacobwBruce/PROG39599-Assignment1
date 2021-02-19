@@ -40,11 +40,24 @@
                     <!-- <img src="..." class="card-img-top" alt="..." /> -->
                     <div class="card-body">
                         <h5 class="card-title" th:text="${team}"></h5>
-                        <p class="card-text">
+                        <!-- <p class="card-text">
                             Some quick example text to build on the card title and make up the bulk
                             of the card's content.
-                        </p>
+                        </p> -->
+                        <ul class="list-group mb-2">
+                            <li class="list-group-item">
+                                <strong>Number of Players:</strong> <br />
+                                0
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Team Captain: </strong><br />
+                                John Doe
+                            </li>
+                        </ul>
                         <a href="#" class="btn btn-primary">Team Roster</a>
+                        <!-- <a th:href="@{/teamRoster/{id}(id=${team.id})}" class="btn btn-primary"
+                            >Team Roster</a
+                        > -->
                     </div>
                 </div>
             </div>
