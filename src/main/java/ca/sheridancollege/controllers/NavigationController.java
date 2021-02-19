@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.sheridancollege.beans.Player;
+import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
 
 @Controller
@@ -27,8 +29,9 @@ public class NavigationController {
     }
 
     @GetMapping("/addPlayer")
-    public String goAddPlayer(Model model) {
+    public String goAddPlayer(Model model, RedirectAttributes redirectModel) {
         if (playerRepo.count() >= 64) {
+            redirectModel.addFlashAttribute("toast", new ToastNotifcation("Cannot add more than 64 players", "danger"));
             return "redirect:/players";
         }
         model.addAttribute("player", new Player());
@@ -37,6 +40,7 @@ public class NavigationController {
 
     @GetMapping("/teams")
     public String goTeams(Model model) {
+        // will need to get all teams!!
         String[] teams = new String[] { "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "Team 6", "Team 7",
                 "Team 8" };
         model.addAttribute("teams", teams);

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.sheridancollege.beans.Player;
+import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
 
 @Controller
@@ -23,16 +25,24 @@ public class PlayerController {
     private PlayerRepository playerRepo;
 
     @PostMapping("/addPlayer")
-    public String addPlayer(@ModelAttribute Player player) {
+    public String addPlayer(@ModelAttribute Player player, RedirectAttributes redirectModel) {
+
+        if (player.getName().trim() == "" || player.getAge() == 0 || player.getEmail().trim() == ""
+                || player.getPhone().trim() == "" || player.getGender() == null) {
+            redirectModel.addFlashAttribute("toast", new ToastNotifcation("All fields are mandatory", "danger"));
+            return "redirect:/players";
+        }
+
         playerRepo.save(player);
+        redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully added player", "success"));
         return "redirect:/players";
     }
 
     @GetMapping("/editPlayer/{id}")
-    public String goEditPlayer(@PathVariable int id, Model model) {
+    public String goEditPlayer(@PathVariable int id, Model model, RedirectAttributes redirectModel) {
         Optional<Player> player = playerRepo.findById(id);
         if (!player.isPresent()) {
-            // player not found!!
+            redirectModel.addFlashAttribute("toast", new ToastNotifcation("Cannot find player", "danger"));
             return "redirect:/players";
         } else {
             model.addAttribute("player", player.get());
@@ -41,14 +51,16 @@ public class PlayerController {
     }
 
     @PostMapping("/editPlayer")
-    public String editPlayer(@ModelAttribute Player player) {
+    public String editPlayer(@ModelAttribute Player player, RedirectAttributes redirectModel) {
         playerRepo.save(player);
+        redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully editted", "success"));
         return "redirect:/players";
     }
 
     @GetMapping("/deletePlayer/{id}")
-    public String goDeletePlayer(@PathVariable int id) {
+    public String goDeletePlayer(@PathVariable int id, RedirectAttributes redirectModel) {
         playerRepo.deleteById(id);
+        redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully deleted", "success"));
         return "redirect:/players";
     }
 
