@@ -40,12 +40,12 @@
                         <ul class="list-group mb-2">
                             <li class="list-group-item">
                                 <strong>Number of Players:</strong> <br />
-                                <span th:text="${team.size}"></span>
+                                <span th:text="${team.players.size}"></span>
                             </li>
                             <li class="list-group-item">
                                 <strong>Team Captain: </strong><br />
                                 <span
-                                    th:text="${team.captain == null} ? 'N/A' : ${team.captain}"
+                                    th:text="${team.players.size == 0} ? 'N/A' : ${team.captain}"
                                 ></span>
                             </li>
                         </ul>

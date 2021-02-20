@@ -1,6 +1,9 @@
 package ca.sheridancollege.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ca.sheridancollege.beans.Player;
 import ca.sheridancollege.beans.Team;
 import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
@@ -26,7 +30,6 @@ public class TeamsController {
 
     @GetMapping("/organizeTeams")
     public String organizeTeams(RedirectAttributes redirectModel) {
-        // Organize teams here
 
         // make sure 20 players are registered
         if (playerRepo.count() < 20) {
@@ -35,11 +38,57 @@ public class TeamsController {
             return "redirect:/teams";
         }
 
-        // each team will have a min of 5 and max of 8 players
+        List<Team> teams = (List<Team>) teamRepo.findAll();
+        List<Player> players = (List<Player>) playerRepo.findAll();
 
-        // teams need to be evenly balanced
+        // find ideal number of teams
+        List<Integer> numOfTeams = new ArrayList<>();
+        for (int i = 5; i <= 8; i++) {
+            int temp = players.size() / i;
+            if (temp >= 5) {
+                System.out.println("Potential number of teams: " + i);
+                numOfTeams.add(i);
+            }
+        }
 
-        // atleast 2 males & 2 females on each team
+        Random rand = new Random();
+        // target number of teams
+        int targetSize = numOfTeams.get(rand.nextInt(numOfTeams.size()));
+
+        int numOfPlayersEachTeam = players.size() / targetSize;
+
+        // overflow is the players 'leftover' that needed to be added
+        int overflow = 0;
+
+        // add 2 males and 2 females to teams
+        for (int i = 0; i < targetSize; i++) {
+
+            int temp = numOfPlayersEachTeam * i;
+            for (int j = temp; j < (temp + numOfPlayersEachTeam); j++) {
+                // assign a player to a team
+                if (j == temp)
+                    teams.get(i).setCaptain(players.get(j).getName());
+                teams.get(i).getPlayers().add(players.get(j));
+                players.get(j).setTeam(teams.get(i));
+
+                overflow = j;
+            }
+        }
+
+        // add remaining players randomly
+        if (overflow != 0) {
+            int i = 0;
+            for (int j = overflow + 1; j < players.size(); j++) {
+                teams.get(i).getPlayers().add(players.get(j));
+                players.get(j).setTeam(teams.get(i));
+                i++;
+            }
+        }
+        //
+        // save back to db
+        teamRepo.saveAll(teams);
+        playerRepo.saveAll(players);
+
         return "redirect:/teams";
     }
 

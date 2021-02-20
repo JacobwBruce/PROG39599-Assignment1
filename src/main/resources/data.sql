@@ -29,11 +29,11 @@ INSERT INTO player(name, email, phone, age, gender) VALUES ('Nancy Kozey', 'Nanc
 INSERT INTO player(name, email, phone, age, gender) VALUES ('Craig Hayes', 'CraigHayes@sheridancollege.ca', '940 239-8551', 18, 'male');
 INSERT INTO player(name, email, phone, age, gender) VALUES ('Micheal Rowe', 'MichealRowe@sheridancollege.ca', '897-556-6994', 38, 'male');
 
-INSERT INTO team(name, size) VALUES('Sheridan Bruins', 0);
-INSERT INTO team(name, size) VALUES('Conestoga Condors', 0);
-INSERT INTO team(name, size) VALUES('Redeemer Royals', 0);
-INSERT INTO team(name, size) VALUES('Fanshawe Falcons', 0);
-INSERT INTO team(name, size) VALUES('Boreal Vipers', 0);
-INSERT INTO team(name, size) VALUES('Humber Hawks', 0);
-INSERT INTO team(name, size) VALUES('Mohawk Mountaineers', 0);
-INSERT INTO team(name, size) VALUES('St. Clair Saints', 0);
+INSERT INTO team(name) VALUES('Sheridan Bruins');
+INSERT INTO team(name) VALUES('Conestoga Condors');
+INSERT INTO team(name) VALUES('Redeemer Royals');
+INSERT INTO team(name) VALUES('Fanshawe Falcons');
+INSERT INTO team(name) VALUES('Boreal Vipers');
+INSERT INTO team(name) VALUES('Humber Hawks');
+INSERT INTO team(name) VALUES('Mohawk Mountaineers');
+INSERT INTO team(name) VALUES('St. Clair Saints');

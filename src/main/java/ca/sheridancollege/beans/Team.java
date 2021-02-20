@@ -24,7 +24,6 @@ public class Team {
 
     private String name;
     private String captain;
-    private int size;
 
     @OneToMany
     private List<Player> players;
