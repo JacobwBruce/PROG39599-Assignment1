@@ -40,6 +40,7 @@
             <div class="row justify-content-center">
                 <form th:action="@{/editPlayer}" th:object="${player}" method="POST" class="col-6">
                     <input type="hidden" th:field="*{id}" />
+                    <input type="hidden" th:field="*{team.id}" />
                     <!-- Name -->
                     <div class="mb-4">
                         <label for="nameInput" class="form-label">Name</label>

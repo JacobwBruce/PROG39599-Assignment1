@@ -3,6 +3,7 @@ package ca.sheridancollege.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,14 +16,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.sheridancollege.beans.Player;
+import ca.sheridancollege.beans.Team;
 import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
+import ca.sheridancollege.repositories.TeamsRepository;
 
 @Controller
 public class PlayerController {
 
     @Autowired
     private PlayerRepository playerRepo;
+    @Autowired
+    private TeamsRepository teamRepo;
 
     @PostMapping("/addPlayer")
     public String addPlayer(@ModelAttribute Player player, RedirectAttributes redirectModel) {
@@ -52,6 +57,9 @@ public class PlayerController {
 
     @PostMapping("/editPlayer")
     public String editPlayer(@ModelAttribute Player player, RedirectAttributes redirectModel) {
+        if (player.getTeam().getId() == null) {
+            player.setTeam(null);
+        }
         playerRepo.save(player);
         redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully editted", "success"));
         return "redirect:/players";
@@ -59,6 +67,29 @@ public class PlayerController {
 
     @GetMapping("/deletePlayer/{id}")
     public String goDeletePlayer(@PathVariable int id, RedirectAttributes redirectModel) {
+        Optional<Player> player = playerRepo.findById(id);
+
+        if (player.get().getTeam() != null) {
+            Team team = teamRepo.findById(player.get().getTeam().getId()).get();
+
+            for (int i = 0; i < team.getPlayers().size(); i++) {
+                if (team.getPlayers().get(i).getId() == id) {
+                    // check if the player is the captain
+                    boolean flag = false;
+                    if (team.getPlayers().get(i).getName().equals(team.getCaptain())) {
+                        flag = true;
+                    }
+                    team.getPlayers().remove(i);
+                    if (flag) {
+                        Random rand = new Random();
+                        team.setCaptain(team.getPlayers().get(rand.nextInt(team.getPlayers().size())).getName());
+                    }
+                }
+            }
+
+            teamRepo.save(team);
+        }
+
         playerRepo.deleteById(id);
         redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully deleted", "success"));
         return "redirect:/players";
