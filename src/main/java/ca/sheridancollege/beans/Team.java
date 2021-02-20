@@ -1,10 +1,12 @@
 package ca.sheridancollege.beans;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,19 +16,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Entity
-public class Player {
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
-    private int age;
-    private String gender;
-    private String phone;
-    private String email;
+    private String captain;
+    private int size;
 
-    @ManyToOne
-    private Team team;
+    @OneToMany
+    private List<Player> players;
 
 }
