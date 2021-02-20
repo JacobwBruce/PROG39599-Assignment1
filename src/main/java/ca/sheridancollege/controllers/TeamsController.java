@@ -39,14 +39,16 @@ public class TeamsController {
         }
 
         List<Team> teams = (List<Team>) teamRepo.findAll();
-        List<Player> players = (List<Player>) playerRepo.findAll();
+        List<Player> malePlayers = playerRepo.findByGender("male");
+        List<Player> femalePlayers = playerRepo.findByGender("female");
+        List<Player> players = new ArrayList<>();
+        int numOfPlayers = (int) playerRepo.count();
 
         // find ideal number of teams
         List<Integer> numOfTeams = new ArrayList<>();
         for (int i = 5; i <= 8; i++) {
-            int temp = players.size() / i;
+            int temp = numOfPlayers / i;
             if (temp >= 5) {
-                System.out.println("Potential number of teams: " + i);
                 numOfTeams.add(i);
             }
         }
@@ -55,37 +57,40 @@ public class TeamsController {
         // target number of teams
         int targetSize = numOfTeams.get(rand.nextInt(numOfTeams.size()));
 
-        int numOfPlayersEachTeam = players.size() / targetSize;
+        int teamIndex = 0;
+        while (malePlayers.size() > 0) {
+            int randomMale = rand.nextInt(malePlayers.size());
+            teams.get(teamIndex).getPlayers().add(malePlayers.get(randomMale));
+            malePlayers.get(randomMale).setTeam(teams.get(teamIndex));
+            players.add(malePlayers.get(randomMale));
+            malePlayers.remove(randomMale);
 
-        // overflow is the players 'leftover' that needed to be added
-        int overflow = 0;
-
-        // add 2 males and 2 females to teams
-        for (int i = 0; i < targetSize; i++) {
-
-            int temp = numOfPlayersEachTeam * i;
-            for (int j = temp; j < (temp + numOfPlayersEachTeam); j++) {
-                // assign a player to a team
-                if (j == temp)
-                    teams.get(i).setCaptain(players.get(j).getName());
-                teams.get(i).getPlayers().add(players.get(j));
-                players.get(j).setTeam(teams.get(i));
-
-                overflow = j;
+            teamIndex++;
+            if (teamIndex == targetSize) {
+                teamIndex = 0;
             }
         }
 
-        // add remaining players randomly
-        if (overflow != 0) {
-            int i = 0;
-            for (int j = overflow + 1; j < players.size(); j++) {
-                teams.get(i).getPlayers().add(players.get(j));
-                players.get(j).setTeam(teams.get(i));
-                i++;
+        while (femalePlayers.size() > 0) {
+            int randomFemale = rand.nextInt(femalePlayers.size());
+            teams.get(teamIndex).getPlayers().add(femalePlayers.get(randomFemale));
+            femalePlayers.get(randomFemale).setTeam(teams.get(teamIndex));
+            players.add(femalePlayers.get(randomFemale));
+            femalePlayers.remove(randomFemale);
+
+            teamIndex++;
+            if (teamIndex == targetSize) {
+                teamIndex = 0;
             }
         }
-        //
-        // save back to db
+
+        // assign captains
+        for (Team team : teams) {
+            if (team.getPlayers().size() > 0) {
+                team.setCaptain(team.getPlayers().get(rand.nextInt(team.getPlayers().size())).getName());
+            }
+        }
+
         teamRepo.saveAll(teams);
         playerRepo.saveAll(players);
 
