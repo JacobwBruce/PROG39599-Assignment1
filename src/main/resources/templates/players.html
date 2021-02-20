@@ -45,6 +45,7 @@
                             <th scope="col">Phone Number</th>
                             <th scope="col">Age</th>
                             <th scope="col">Gender</th>
+                            <th scope="col">Team</th>
                             <th scope="col">Edit</th>
                             <th scope="col">Delete</th>
                         </tr>
@@ -56,6 +57,7 @@
                             <td th:text="${player.phone}"></td>
                             <td th:text="${player.age}"></td>
                             <td th:text="${player.gender}"></td>
+                            <td th:text="${player.team == null} ? 'N/A' : ${player.team.name}"></td>
                             <td>
                                 <a th:href="@{/editPlayer/{id}(id=${player.id})}"
                                     ><i class="fas fa-edit"></i
