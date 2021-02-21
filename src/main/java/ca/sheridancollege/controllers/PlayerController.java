@@ -59,6 +59,12 @@ public class PlayerController {
     public String editPlayer(@ModelAttribute Player player, RedirectAttributes redirectModel) {
         if (player.getTeam().getId() == null) {
             player.setTeam(null);
+        } else {
+            Team team = teamRepo.findById(player.getTeam().getId()).get();
+            Player tempPlayer = playerRepo.findById(player.getId()).get();
+            if (tempPlayer.getName().equals(team.getCaptain())) {
+                team.setCaptain(player.getName());
+            }
         }
         playerRepo.save(player);
         redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully editted", "success"));
