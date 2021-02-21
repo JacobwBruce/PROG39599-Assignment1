@@ -38,6 +38,14 @@ public class TeamsController {
             return "redirect:/teams";
         }
 
+        for (Player player : playerRepo.findAll()) {
+            if (player.getTeam() != null) {
+                redirectModel.addFlashAttribute("toast",
+                        new ToastNotifcation("Cannot organize teams they have already been organized", "danger"));
+                return "redirect:/teams";
+            }
+        }
+
         List<Team> teams = (List<Team>) teamRepo.findAll();
         List<Player> malePlayers = playerRepo.findByGender("male");
         List<Player> femalePlayers = playerRepo.findByGender("female");
