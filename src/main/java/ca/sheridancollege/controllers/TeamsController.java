@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.sheridancollege.beans.Player;
@@ -110,17 +111,59 @@ public class TeamsController {
 
         Optional<Team> team = teamRepo.findById(id);
 
-        if (team.isPresent()) {
-            model.addAttribute("team", team.get());
-            return "teamroster.html";
+        if (!team.isPresent()) {
+            redirectModel.addFlashAttribute("toast", new ToastNotifcation("Cannot find team with id: " + id, "danger"));
+            return "redirect:/teams";
         }
-        redirectModel.addFlashAttribute("toast", new ToastNotifcation("Cannot find team with id: " + id, "danger"));
-        return "redirect:/teams";
+
+        model.addAttribute("team", team.get());
+        return "teamroster.html";
     }
 
     @PostMapping("/trade")
-    public String tradePlayers() {
-        // commence the trade here
+    public String tradePlayers(@RequestParam String playerOneSelect, @RequestParam String playerTwoSelect,
+            @RequestParam String teamOneSelect, @RequestParam String teamTwoSelect, @RequestParam String action,
+            RedirectAttributes redirectModel) {
+
+        // make sure the user selected a player to move/trade
+        if (playerOneSelect.equals("") || teamOneSelect.equals("Select a team")) {
+            redirectModel.addFlashAttribute("toast", new ToastNotifcation("Please select a player to move", "danger"));
+            return "redirect:/trade";
+        }
+
+        int teamIndex = 0;
+        if (action.equals("swap")) {
+            teamIndex = 1;
+        }
+
+        String destinationTeam = teamTwoSelect.split(",")[teamIndex];
+        if (destinationTeam.equals("Select a team")) {
+            redirectModel.addFlashAttribute("toast",
+                    new ToastNotifcation(
+                            "Please select a destination for: "
+                                    + playerRepo.findById(Integer.parseInt(playerOneSelect)).get().getName(),
+                            "danger"));
+            return "redirect:/trade";
+        }
+
+        if (action.equals("move")) {
+            // move the player to the destination team
+
+        } else {
+            // make sure that player 2 is selected
+            System.out.println(playerTwoSelect);
+            if (playerTwoSelect.equals("")) {
+                redirectModel.addFlashAttribute("toast",
+                        new ToastNotifcation(
+                                "Please select a player to trade for for: "
+                                        + playerRepo.findById(Integer.parseInt(playerOneSelect)).get().getName(),
+                                "danger"));
+                return "redirect:/trade";
+            }
+            // swap players
+
+        }
+
         return "redirect:/teams";
     }
 

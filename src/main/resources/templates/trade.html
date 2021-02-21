@@ -12,18 +12,16 @@
             integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
             crossorigin="anonymous"
         />
-        <!-- Bootstrap JS -->
-        <script
-            defer
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-            crossorigin="anonymous"
-        ></script>
         <!-- Bootstrap template -->
         <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-
+        <script th:src="@{/js/trade.js}" defer></script>
         <title>Trade</title>
     </head>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
     <body>
         <div th:replace="fragments/header :: header"></div>
         <main class="container">
@@ -36,62 +34,182 @@
                     <select
                         class="form-select mb-4"
                         aria-label="Default select example"
-                        id="teamSelect"
+                        id="team-one-select"
+                        name="teamOneSelect"
                     >
                         <option selected>Select a team</option>
                         <option
                             th:each="team : ${teams}"
-                            th:value="${team}"
-                            th:text="${team}"
+                            th:value="${team.id}"
+                            th:text="${team.name}"
                         ></option>
                     </select>
 
-                    <!-- Player 1 -->
-                    <label for="playerSelect" class="form-label">Select a player: </label>
-                    <select
-                        class="form-select mb-4"
-                        aria-label="Default select example"
-                        id="playerSelect"
-                    >
-                        <option selected>Select a player</option>
-                        <option>John Doe</option>
-                        <option>Jane Doe</option>
-                    </select>
+                    <input type="hidden" name="playerOneSelect" id="player-one-value" />
 
-                    <h4 class="text-center">FOR/TO:</h4>
+                    <div th:each="team: ${teams}">
+                        <div th:id="${team.id}" class="team-one-players hidden">
+                            <!-- Player 1 -->
+                            <label for="player-one-select" class="form-label"
+                                >Select a player:
+                            </label>
+                            <select
+                                class="form-select mb-4"
+                                aria-label="Default select example"
+                                id="player-one-select"
+                            >
+                                <option selected>Select a player</option>
+                                <option
+                                    th:each="player: ${team.players}"
+                                    th:value="${player.id}"
+                                    th:text="${player.name}"
+                                ></option>
+                            </select>
+                        </div>
+                    </div>
 
-                    <!-- Team 2 -->
-                    <label for="teamSelect" class="form-label">Select a team: </label>
-                    <select
-                        class="form-select mb-4"
-                        aria-label="Default select example"
-                        id="teamSelect"
-                    >
-                        <option selected>Select a team</option>
-                        <option
-                            th:each="team : ${teams}"
-                            th:value="${team}"
-                            th:text="${team}"
-                        ></option>
-                    </select>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link active"
+                                id="move-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#move"
+                                type="button"
+                                role="tab"
+                                aria-controls="move"
+                                aria-selected="true"
+                            >
+                                Move
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link"
+                                id="swap-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#swap"
+                                type="button"
+                                role="tab"
+                                aria-controls="Swap"
+                                aria-selected="false"
+                            >
+                                Swap
+                            </button>
+                        </li>
+                    </ul>
 
-                    <!-- Player 2 -->
-                    <label for="playerSelect" class="form-label">Select a player: </label>
-                    <select
-                        class="form-select mb-4"
-                        aria-label="Default select example"
-                        id="playerSelect"
-                    >
-                        <option selected>Select a player</option>
-                        <option>John Doe</option>
-                        <option>Jane Doe</option>
-                    </select>
+                    <input type="hidden" name="action" id="action" value="move" />
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div
+                            class="tab-pane active"
+                            id="move"
+                            role="tabpanel"
+                            aria-labelledby="move-tab"
+                        >
+                            <!-- Team 2 - move -->
+                            <label for="teamSelect" class="form-label mt-3">Select a team: </label>
+                            <select
+                                class="form-select mb-4"
+                                aria-label="Default select example"
+                                name="teamTwoSelect"
+                            >
+                                <option selected>Select a team</option>
+                                <option
+                                    th:each="team : ${teams}"
+                                    th:value="${team.id}"
+                                    th:text="${team.name}"
+                                ></option>
+                            </select>
+                        </div>
+                        <div class="tab-pane" id="swap" role="tabpanel" aria-labelledby="swap-tab">
+                            <!-- Team 2 - swap -->
+                            <label for="teamSelect" class="form-label mt-3">Select a team: </label>
+                            <select
+                                class="form-select mb-4"
+                                aria-label="Default select example"
+                                id="team-two-select"
+                                name="teamTwoSelect"
+                            >
+                                <option selected>Select a team</option>
+                                <option
+                                    th:each="team : ${teams}"
+                                    th:value="${team.id}"
+                                    th:text="${team.name}"
+                                ></option>
+                            </select>
+
+                            <input type="hidden" name="playerTwoSelect" id="player-two-value" />
+
+                            <div th:each="team: ${teams}">
+                                <div th:id="${team.id}" class="team-two-players hidden">
+                                    <!-- Player 2 -->
+                                    <label for="player-two-select" class="form-label"
+                                        >Select a player:
+                                    </label>
+                                    <select
+                                        class="form-select mb-4"
+                                        aria-label="Default select example"
+                                        id="player-two-select"
+                                    >
+                                        <option selected>Select a player</option>
+                                        <option
+                                            th:each="player: ${team.players}"
+                                            th:value="${player.id}"
+                                            th:text="${player.name}"
+                                        ></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary px-5 py-2">Trade</button>
                     </div>
                 </form>
             </div>
+            <div
+                th:if="${toast != null}"
+                class="toast align-items-center text-white border-0 position-fixed bottom-0 end-0 m-4"
+                th:classappend="'bg-'+${toast.type}"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+            >
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="toast-body" th:text="${toast.message}"></div>
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white mr-2"
+                        data-bs-dismiss="toast"
+                        aria-label="Close"
+                    ></button>
+                </div>
+            </div>
         </main>
+        <!-- Bootstrap JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+            crossorigin="anonymous"
+        ></script>
+        <script defer>
+            // toast notifications
+            const option = {
+                animation: true,
+                delay: 10000,
+            };
+            const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            const toastList = toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl, option);
+            });
+
+            for (const toast of toastList) {
+                toast.show();
+            }
+        </script>
     </body>
 </html>

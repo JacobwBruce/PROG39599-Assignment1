@@ -1,5 +1,7 @@
 package ca.sheridancollege.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ca.sheridancollege.beans.Player;
+import ca.sheridancollege.beans.Team;
 import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
 import ca.sheridancollege.repositories.TeamsRepository;
@@ -50,10 +53,7 @@ public class NavigationController {
 
     @GetMapping("/trade")
     public String goTrade(Model model) {
-        // will need to get all teams and all players!!
-        String[] teams = new String[] { "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "Team 6", "Team 7",
-                "Team 8" };
-        model.addAttribute("teams", teams);
+        model.addAttribute("teams", teamRepo.findAll());
         return "trade.html";
     }
 

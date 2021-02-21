@@ -75,6 +75,11 @@ public class PlayerController {
     public String goDeletePlayer(@PathVariable int id, RedirectAttributes redirectModel) {
         Optional<Player> player = playerRepo.findById(id);
 
+        if (!player.isPresent()) {
+            redirectModel.addFlashAttribute("toast", new ToastNotifcation("Cannot find player", "danger"));
+            return "redirect:/players";
+        }
+
         if (player.get().getTeam() != null) {
             Team team = teamRepo.findById(player.get().getTeam().getId()).get();
 
