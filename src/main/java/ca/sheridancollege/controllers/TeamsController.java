@@ -32,6 +32,8 @@ public class TeamsController {
 
     PlayerUtils playerUtils = new PlayerUtils();
 
+    private boolean teamsOrganized = false;
+
     @GetMapping("/organizeTeams")
     public String organizeTeams(RedirectAttributes redirectModel) {
 
@@ -43,15 +45,10 @@ public class TeamsController {
         }
 
         // Check if teams have already been organized
-        // TODO -> find a better solution for this
-        // possible an instance variable on this class
-
-        for (Player player : playerRepo.findAll()) {
-            if (player.getTeam() != null) {
-                redirectModel.addFlashAttribute("toast",
-                        new ToastNotifcation("Cannot organize teams they have already been organized", "danger"));
-                return "redirect:/teams";
-            }
+        if (teamsOrganized) {
+            redirectModel.addFlashAttribute("toast",
+                    new ToastNotifcation("Cannot organize teams they have already been organized", "danger"));
+            return "redirect:/teams";
         }
 
         List<Team> teams = (List<Team>) teamRepo.findAll();
@@ -110,6 +107,7 @@ public class TeamsController {
         teamRepo.saveAll(teams);
         playerRepo.saveAll(players);
 
+        teamsOrganized = true;
         return "redirect:/teams";
     }
 
