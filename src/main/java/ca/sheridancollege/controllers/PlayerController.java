@@ -20,6 +20,7 @@ import ca.sheridancollege.beans.Team;
 import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
 import ca.sheridancollege.repositories.TeamsRepository;
+import ca.sheridancollege.utils.PlayerUtils;
 
 @Controller
 public class PlayerController {
@@ -28,6 +29,8 @@ public class PlayerController {
     private PlayerRepository playerRepo;
     @Autowired
     private TeamsRepository teamRepo;
+
+    PlayerUtils playerUtils = new PlayerUtils();
 
     @PostMapping("/addPlayer")
     public String addPlayer(@ModelAttribute Player player, RedirectAttributes redirectModel) {
@@ -80,28 +83,12 @@ public class PlayerController {
             return "redirect:/players";
         }
 
-        if (player.get().getTeam() != null) {
-            Team team = teamRepo.findById(player.get().getTeam().getId()).get();
+        // remove player from their team
+        playerUtils.removePlayerFromTeam(player.get(), teamRepo);
 
-            for (int i = 0; i < team.getPlayers().size(); i++) {
-                if (team.getPlayers().get(i).getId() == id) {
-                    // check if the player is the captain
-                    boolean flag = false;
-                    if (team.getPlayers().get(i).getName().equals(team.getCaptain())) {
-                        flag = true;
-                    }
-                    team.getPlayers().remove(i);
-                    if (flag) {
-                        Random rand = new Random();
-                        team.setCaptain(team.getPlayers().get(rand.nextInt(team.getPlayers().size())).getName());
-                    }
-                }
-            }
-
-            teamRepo.save(team);
-        }
-
+        // delete player
         playerRepo.deleteById(id);
+
         redirectModel.addFlashAttribute("toast", new ToastNotifcation("Successfully deleted", "success"));
         return "redirect:/players";
     }

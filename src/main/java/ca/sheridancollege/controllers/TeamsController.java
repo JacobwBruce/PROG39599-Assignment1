@@ -19,6 +19,7 @@ import ca.sheridancollege.beans.Team;
 import ca.sheridancollege.beans.ToastNotifcation;
 import ca.sheridancollege.repositories.PlayerRepository;
 import ca.sheridancollege.repositories.TeamsRepository;
+import ca.sheridancollege.utils.PlayerUtils;
 
 @Controller
 public class TeamsController {
@@ -29,6 +30,8 @@ public class TeamsController {
     @Autowired
     private PlayerRepository playerRepo;
 
+    PlayerUtils playerUtils = new PlayerUtils();
+
     @GetMapping("/organizeTeams")
     public String organizeTeams(RedirectAttributes redirectModel) {
 
@@ -38,6 +41,10 @@ public class TeamsController {
                     new ToastNotifcation("Cannot organize teams if there are less than 20 players", "danger"));
             return "redirect:/teams";
         }
+
+        // Check if teams have already been organized
+        // TODO -> find a better solution for this
+        // possible an instance variable on this class
 
         for (Player player : playerRepo.findAll()) {
             if (player.getTeam() != null) {
@@ -136,18 +143,40 @@ public class TeamsController {
             teamIndex = 1;
         }
 
-        String destinationTeam = teamTwoSelect.split(",")[teamIndex];
-        if (destinationTeam.equals("Select a team")) {
+        // Make the the user selects a team to move/swap to
+        String destinationTeamId = teamTwoSelect.split(",")[teamIndex];
+        if (destinationTeamId.equals("Select a team") || destinationTeamId.equals(teamOneSelect)) {
             redirectModel.addFlashAttribute("toast",
                     new ToastNotifcation(
-                            "Please select a destination for: "
+                            "Please select a valid destination for: "
                                     + playerRepo.findById(Integer.parseInt(playerOneSelect)).get().getName(),
                             "danger"));
             return "redirect:/trade";
         }
 
+        // get player and teams
+        Team destinationTeam = teamRepo.findById(Integer.parseInt(destinationTeamId)).get();
+        Team originalTeam = teamRepo.findById(Integer.parseInt(teamOneSelect)).get();
+        Player playerOne = playerRepo.findById(Integer.parseInt(playerOneSelect)).get();
+
         if (action.equals("move")) {
+            // do not allow the player to move if there is no space available
+            // also not allowing players to join a team if the team is empty (might change)
+            if (destinationTeam.getPlayers().size() == 8
+                    || destinationTeam.getPlayers().size() >= originalTeam.getPlayers().size()
+                    || destinationTeam.getPlayers().size() == 0) {
+                redirectModel.addFlashAttribute("toast", new ToastNotifcation(
+                        "Cannot trade: teams are either full or would be too unevenly matched ", "danger"));
+                return "redirect:/trade";
+            }
+
             // move the player to the destination team
+            playerUtils.removePlayerFromTeam(playerOne, teamRepo);
+            playerOne.setTeam(destinationTeam);
+            destinationTeam.getPlayers().add(playerOne);
+
+            playerRepo.save(playerOne);
+            teamRepo.save(destinationTeam);
 
         } else {
             // make sure that player 2 is selected
@@ -161,6 +190,21 @@ public class TeamsController {
                 return "redirect:/trade";
             }
             // swap players
+            Player playerTwo = playerRepo.findById(Integer.parseInt(playerTwoSelect)).get();
+
+            playerUtils.removePlayerFromTeam(playerOne, teamRepo);
+            playerUtils.removePlayerFromTeam(playerTwo, teamRepo);
+
+            playerOne.setTeam(destinationTeam);
+            destinationTeam.getPlayers().add(playerOne);
+
+            playerTwo.setTeam(originalTeam);
+            originalTeam.getPlayers().add(playerTwo);
+
+            playerRepo.save(playerOne);
+            teamRepo.save(destinationTeam);
+            playerRepo.save(playerTwo);
+            teamRepo.save(originalTeam);
 
         }
 
