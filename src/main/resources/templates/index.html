@@ -24,10 +24,41 @@
 
         <title>Assignment 1 - Jacob Bruce</title>
     </head>
+    <style>
+        p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+                Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+                'Segoe UI Symbol', 'Noto Color Emoji';
+        }
+        p span {
+            margin: 5px 0px;
+        }
+    </style>
     <body>
         <div th:replace="fragments/header :: header"></div>
         <main class="container">
-            <h1>Home Page</h1>
+            <div class="row">
+                <div class="col d-flex flex-column justify-content-center align-items-baseline">
+                    <h3>Assignment 1</h3>
+                    <p class="py-5 d-flex flex-column">
+                        <span
+                            >View all players & perform appropriate CRUD operations on players from
+                            the players tab</span
+                        >
+                        <span>Organize teams and view team rosters from the teams tab</span>
+                        <span>Trade & move players from the trade tab</span>
+                        <span>Search from the navbar</span>
+                    </p>
+                    <a href="/teams" class="btn btn-outline-primary">View Teams</a>
+                </div>
+                <div class="col">
+                    <img
+                        th:src="@{images/volleyball.png}"
+                        class="img-fluid my-5"
+                        alt="volleyball"
+                    />
+                </div>
+            </div>
         </main>
     </body>
 </html>
