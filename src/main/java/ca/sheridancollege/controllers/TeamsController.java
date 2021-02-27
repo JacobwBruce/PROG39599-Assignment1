@@ -47,7 +47,7 @@ public class TeamsController {
         // Check if teams have already been organized
         if (teamsOrganized) {
             redirectModel.addFlashAttribute("toast",
-                    new ToastNotifcation("Cannot organize teams they have already been organized", "danger"));
+                    new ToastNotifcation("Cannot organize teams, they have already been organized", "danger"));
             return "redirect:/teams";
         }
 

@@ -4,7 +4,6 @@ import java.util.Random;
 
 import ca.sheridancollege.beans.Player;
 import ca.sheridancollege.beans.Team;
-import ca.sheridancollege.repositories.PlayerRepository;
 import ca.sheridancollege.repositories.TeamsRepository;
 
 public class PlayerUtils {

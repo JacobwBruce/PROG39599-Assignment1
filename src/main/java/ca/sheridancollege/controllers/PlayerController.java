@@ -110,6 +110,15 @@ public class PlayerController {
             case "gender":
                 players = playerRepo.findByGender(query);
                 break;
+            case "team":
+                List<Team> teams = teamRepo.findByName(query);
+                if (teams.size() > 0) {
+                    players = playerRepo.findByTeam(teams.get(0));
+                }
+                break;
+        }
+        if (players.size() == 0) {
+            model.addAttribute("toast", new ToastNotifcation("Cannot find any players from that search", "warning"));
         }
         model.addAttribute("players", players);
         return "players.html";

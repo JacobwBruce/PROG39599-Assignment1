@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import ca.sheridancollege.beans.Player;
+import ca.sheridancollege.beans.Team;
 
 @Repository
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
@@ -16,6 +17,5 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 
     public List<Player> findByGender(String gender);
 
-    // also need to search by team
-
+    public List<Player> findByTeam(Team team);
 }
